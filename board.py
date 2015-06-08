@@ -22,13 +22,12 @@ class Board:
 			for k in range(i, len(self.board) - 1):
 				self.board[k][j] = self.board[k + 1][j]
 			self.board[len(self.board) - 1][j] = random.randint(1, 5)
-			print "Update"
-			self.printBoard()
 
 	def searchForMatchesAndClear(self):
 		matches = []
 		currentTileType = 0
 		currentTileMatchCount = 0
+		sizeOfCombo = 0
 
 		for j in range(len(self.board[0])):
 			for i in range(len(self.board)):
@@ -42,6 +41,7 @@ class Board:
 					matches.append([i - 2, j])
 					matches.append([i - 1, j])
 					matches.append([i    , j])
+					sizeOfCombo += 1
 					self.points += 3
 				if (currentTileMatchCount > 3):
 					matches.append([i, j])
@@ -64,12 +64,15 @@ class Board:
 					matches.append([i, j - 2])
 					matches.append([i, j - 1])
 					matches.append([i, j])
+					sizeOfCombo += 1
 					self.points += 3
 				if (currentTileMatchCount > 3):
 					matches.append([i, j])
 					self.points += 2
 			currentTileType = 0
 			currentTileMatchCount = 0
+
+		self.points *= sizeOfCombo
 
 		self.clearMatches(matches)
 
@@ -83,10 +86,15 @@ class Board:
 			self.fillBoard()
 			if (self.points == 0):
 				break
+			print "Score ",self.points
 			self.points = 0
-			
-		
+
+	def swapAtPosition(self, i, j):
+		temp = self.board[i][j]
+		self.board[i][j] = self.board[i][j + 1]
+		self.board[i][j + 1] = temp
+		self.scorePointsAndReplenishBoard()
+
 b = Board()
 b.fillBoard()
 b.scorePointsAndReplenishBoard()
-print b.points
