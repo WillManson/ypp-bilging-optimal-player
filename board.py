@@ -105,12 +105,6 @@ class Board:
                 copy.pieces[i][j] = self.pieces[i][j]
         return copy
 
-    def getPointsForSwap(self, i, j):
-        copy = self.getCopy()
-        copy.swapPieces(i, j)
-        copy.searchForMatchesAndClear()
-        return copy.points
-
 class SequenceOfMoves:
     def __init__(self, moves, points):
         self.moves = moves
