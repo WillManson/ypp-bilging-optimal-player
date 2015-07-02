@@ -120,20 +120,6 @@ class SequenceOfMoves:
         self.moves = [ move ] + self.moves
 
 class BruteForcer:
-    def __init__(self, b):
-        self.b = b
-
-    def getOptimalMove(self):
-        bestMove = [ 0, 0 ]
-        bestMovePoints = 0
-        for i in range(len(b.pieces)):
-            for j in range(len(b.pieces[i]) - 1):
-                points = b.getPointsForSwap(i, j)
-                if (points > bestMovePoints):
-                    bestMove = [ i, j ]
-                    bestMovePoints = points
-        return bestMove
-
     def getOptimalSequenceOfMoves(self, board, sequenceLength):
         optimalSequenceOfMoves = SequenceOfMoves([], 0)
 
@@ -161,7 +147,7 @@ class BruteForcer:
 b = Board()
 b.fillBoard()
 b.scorePointsAndReplenishBoard()
-bf = BruteForcer(b)
+bf = BruteForcer()
 optimal = bf.getOptimalSequenceOfMoves(b, 3)
 print optimal.moves
 print optimal.points
