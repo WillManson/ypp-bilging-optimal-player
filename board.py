@@ -1,5 +1,4 @@
 import random
-import numpy
 
 class Board:
     def __init__(self):
