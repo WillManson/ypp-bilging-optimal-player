@@ -1,27 +1,28 @@
 import random
+import numpy
 
 class Board:
     def __init__(self):
-        self.board = [[0 for column in range(6)] for row in range(12)]
+        self.pieces = [[0 for column in range(6)] for row in range(12)]
         self.points = 0
 
     def printBoard(self):
-        for row in self.board:
+        for row in self.pieces:
             for column in row:
                 print column,
             print "\n",
 
     def fillBoard(self):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if self.board[i][j] == 0:
+        for i in range(len(self.pieces)):
+            for j in range(len(self.pieces[i])):
+                if self.pieces[i][j] == 0:
                     self.fillSpace(i, j)
 
     def fillSpace(self, i, j):
-        while self.board[i][j] == 0:
-            for k in range(i, len(self.board) - 1):
-                self.board[k][j] = self.board[k + 1][j]
-            self.board[len(self.board) - 1][j] = random.randint(1, 5)
+        while self.pieces[i][j] == 0:
+            for k in range(i, len(self.pieces) - 1):
+                self.pieces[k][j] = self.pieces[k + 1][j]
+            self.pieces[len(self.pieces) - 1][j] = random.randint(1, 5)
 
     def searchForMatchesAndClear(self):
         self.points = 0
@@ -30,12 +31,12 @@ class Board:
         currentTileMatchCount = 0
         sizeOfCombo = 0
 
-        for j in range(len(self.board[0])):
-            for i in range(len(self.board)):
-                if currentTileType == self.board[i][j]:
+        for j in range(len(self.pieces[0])):
+            for i in range(len(self.pieces)):
+                if currentTileType == self.pieces[i][j]:
                     currentTileMatchCount += 1
                 else:
-                    currentTileType = self.board[i][j]
+                    currentTileType = self.pieces[i][j]
                     currentTileMatchCount = 1
 
                 if currentTileMatchCount == 3:
@@ -53,12 +54,12 @@ class Board:
         currentTileType = 0
         currentTileMatchCount = 0
 
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if currentTileType == self.board[i][j]:
+        for i in range(len(self.pieces)):
+            for j in range(len(self.pieces[i])):
+                if currentTileType == self.pieces[i][j]:
                     currentTileMatchCount += 1
                 else:
-                    currentTileType = self.board[i][j]
+                    currentTileType = self.pieces[i][j]
                     currentTileMatchCount = 1
 
                 if currentTileMatchCount == 3:
@@ -79,7 +80,7 @@ class Board:
 
     def clearMatches(self, matches):
         for match in matches:
-            self.board[match[0]][match[1]] = 0
+            self.pieces[match[0]][match[1]] = 0
 
     def scorePointsAndReplenishBoard(self):
         while True:
@@ -90,19 +91,19 @@ class Board:
             print "Score ",self.points
 
     def swapPieces(self, i, j):
-        temp = self.board[i][j]
-        self.board[i][j] = self.board[i][j + 1]
-        self.board[i][j + 1] = temp
+        temp = self.pieces[i][j]
+        self.pieces[i][j] = self.pieces[i][j + 1]
+        self.pieces[i][j + 1] = temp
 
     def performSwap(self, i, j):
-        swapPieces(i, j)
+        self.swapPieces(i, j)
         self.scorePointsAndReplenishBoard()
 
     def getCopy(self):
         copy = Board()
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                copy.board[i][j] = self.board[i][j]
+        for i in range(len(self.pieces)):
+            for j in range(len(self.pieces[i])):
+                copy.pieces[i][j] = self.pieces[i][j]
         return copy
 
     def getPointsForSwap(self, i, j):
@@ -111,6 +112,14 @@ class Board:
         copy.searchForMatchesAndClear()
         return copy.points
 
+class SequenceOfMoves:
+    def __init__(self, moves, points):
+        self.moves = moves
+        self.points = points
+
+    def prependMove(self, move):
+        self.moves = [ move ] + self.moves
+
 class BruteForcer:
     def __init__(self, b):
         self.b = b
@@ -118,17 +127,48 @@ class BruteForcer:
     def getOptimalMove(self):
         bestMove = [ 0, 0 ]
         bestMovePoints = 0
-        for i in range(len(b.board)):
-            for j in range(len(b.board[i]) - 1):
+        for i in range(len(b.pieces)):
+            for j in range(len(b.pieces[i]) - 1):
                 points = b.getPointsForSwap(i, j)
                 if (points > bestMovePoints):
                     bestMove = [ i, j ]
                     bestMovePoints = points
         return bestMove
 
+    def getOptimalSequenceOfMoves(self, board, sequenceLength):
+        optimalSequenceOfMoves = SequenceOfMoves([], 0)
+
+        if (sequenceLength == 0):
+            return optimalSequenceOfMoves
+
+        for i in range(len(board.pieces)):
+            for j in range(len(board.pieces[i]) - 1):
+                copy = board.getCopy()
+                copy.swapPieces(i, j)
+                copy.searchForMatchesAndClear()                
+                if (copy.points == 0):
+                    newSequenceOfMoves = self.getOptimalSequenceOfMoves(copy, sequenceLength - 1)
+                    newSequenceOfMoves.prependMove([i, j])
+                    if (newSequenceOfMoves.points > optimalSequenceOfMoves.points):
+                        optimalSequenceOfMoves = newSequenceOfMoves
+                else:
+                    newSequenceOfMoves = SequenceOfMoves([[i, j]], copy.points)
+                    if (newSequenceOfMoves.points > optimalSequenceOfMoves.points):
+                        optimalSequenceOfMoves = newSequenceOfMoves
+
+        return optimalSequenceOfMoves
+
+
 b = Board()
 b.fillBoard()
 b.scorePointsAndReplenishBoard()
 bf = BruteForcer(b)
-print bf.getOptimalMove()
+optimal = bf.getOptimalSequenceOfMoves(b, 3)
+print optimal.moves
+print optimal.points
 b.printBoard()
+for move in optimal.moves:
+    print "Swapping"
+    print move
+    b.performSwap(move[0], move[1])
+    b.printBoard()
