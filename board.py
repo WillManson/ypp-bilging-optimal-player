@@ -1,4 +1,6 @@
 import random
+execfile("brute_forcer.py")
+execfile("sequence_of_moves.py")
 
 class Board:
     def __init__(self):
@@ -105,45 +107,11 @@ class Board:
                 copy.pieces[i][j] = self.pieces[i][j]
         return copy
 
-class SequenceOfMoves:
-    def __init__(self, moves, points):
-        self.moves = moves
-        self.points = points
-
-    def prependMove(self, move):
-        self.moves = [ move ] + self.moves
-
-class BruteForcer:
-    def getOptimalSequenceOfMoves(self, board, sequenceLength):
-        optimalSequenceOfMoves = SequenceOfMoves([], 0)
-
-        if (sequenceLength == 0):
-            return optimalSequenceOfMoves
-
-        for i in range(len(board.pieces)):
-            for j in range(len(board.pieces[i]) - 1):
-                copy = board.getCopy()
-                copy.swapPieces(i, j)
-                copy.searchForMatchesAndClear()                
-                if (copy.points == 0):
-                    newSequenceOfMoves = self.getOptimalSequenceOfMoves(copy, sequenceLength - 1)
-                    newSequenceOfMoves.prependMove([i, j])
-                    newSequenceOfMoves.points -= 1
-                    if (newSequenceOfMoves.points > optimalSequenceOfMoves.points):
-                        optimalSequenceOfMoves = newSequenceOfMoves
-                else:
-                    newSequenceOfMoves = SequenceOfMoves([[i, j]], copy.points - 1)
-                    if (newSequenceOfMoves.points > optimalSequenceOfMoves.points):
-                        optimalSequenceOfMoves = newSequenceOfMoves
-
-        return optimalSequenceOfMoves
-
-
 b = Board()
 b.fillBoard()
 b.scorePointsAndReplenishBoard()
-bf = BruteForcer()
-optimal = bf.getOptimalSequenceOfMoves(b, 3)
+brute = BruteForcer()
+optimal = brute.getOptimalSequenceOfMoves(b, 3)
 print optimal.moves
 print optimal.points
 b.printBoard()
