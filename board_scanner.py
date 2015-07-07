@@ -63,8 +63,8 @@ class BoardScanner:
         self.outputPiecesWithXInGivenPosition(row, column)
         print "Please identify the piece marked X"
         print "Enter the piece number according to the output above"
-        print "or enter " + `(self.numberOfDistinctPieces + 1)` + " if the piece"
-        print "is new (i.e. it doesn't appear in the output above:",
+        print "or enter " + `(self.numberOfDistinctPieces + 1)` + " if the piece is new (i.e. it doesn't appear "  
+        print "in the output above:",
         userInput = input("")
         if userInput > 0 and userInput <= self.numberOfDistinctPieces:
             self.pieceMap[pieceColour] = userInput
