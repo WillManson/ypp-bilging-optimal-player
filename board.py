@@ -112,18 +112,14 @@ class Board:
         return copy
 
 bs = BoardScanner()
-bs.readBoardFromScreen()
-bs.reduceBoard()
-pieces = bs.getBoard()
-b = Board()
-b.setBoard(pieces)
-brute = BruteForcer()
-optimal = brute.getOptimalSequenceOfMoves(b, 3)
-print optimal.moves
-print optimal.points
-b.printBoard()
-for move in optimal.moves:
-    print "Swapping"
-    print move
-    b.performSwap(move[0], move[1])
-    b.printBoard()
+
+while (True):
+    bs.updateBoard()
+    pieces = bs.getBoard()
+    b = Board()
+    b.setBoard(pieces)
+    brute = BruteForcer()
+    optimal = brute.getOptimalSequenceOfMoves(b, 3)
+    print optimal.moves
+    print optimal.points
+    raw_input("Press enter when you are ready")

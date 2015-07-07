@@ -9,13 +9,19 @@ class BoardScanner:
         mouse = PyMouse()
         position = mouse.position()
         self.intPosition = (int(round(position[0])), int(round(position[1])))
-        self.boardPieces = [[0 for column in range(6)] for row in range(12)]
-        self.simplifiedBoard = [[0 for column in range(6)] for row in range(12)]
         self.pieceMap = {}
         self.numberOfDistinctPieces = 0
+        self.boardPieces = [[0 for column in range(6)] for row in range(12)]
+        self.simplifiedBoard = [[0 for column in range(6)] for row in range(12)]
 
     def getBoard(self):
         return self.simplifiedBoard
+
+    def updateBoard(self):
+        self.boardPieces = [[0 for column in range(6)] for row in range(12)]
+        self.simplifiedBoard = [[0 for column in range(6)] for row in range(12)]
+        self.readBoardFromScreen()
+        self.reduceBoard()
 
     def readBoardFromScreen(self):
         image = pyscreenshot.grab()
