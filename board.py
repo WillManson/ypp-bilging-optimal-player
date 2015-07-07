@@ -1,11 +1,15 @@
 import random
 execfile("brute_forcer.py")
 execfile("sequence_of_moves.py")
+execfile("board_scanner.py")
 
 class Board:
     def __init__(self):
         self.pieces = [[0 for column in range(6)] for row in range(12)]
         self.points = 0
+
+    def setBoard(self, pieces):
+        self.pieces = pieces
 
     def printBoard(self):
         for row in self.pieces:
@@ -107,9 +111,12 @@ class Board:
                 copy.pieces[i][j] = self.pieces[i][j]
         return copy
 
+bs = BoardScanner()
+bs.readBoardFromScreen()
+bs.reduceBoard()
+pieces = bs.getBoard()
 b = Board()
-b.fillBoard()
-b.scorePointsAndReplenishBoard()
+b.setBoard(pieces)
 brute = BruteForcer()
 optimal = brute.getOptimalSequenceOfMoves(b, 3)
 print optimal.moves
