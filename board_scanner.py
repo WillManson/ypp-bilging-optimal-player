@@ -1,13 +1,14 @@
 import PIL.Image
 import PIL.ImageStat
 import pyscreenshot
+import time
 from pymouse import PyMouse
 
 class BoardScanner:
     def __init__(self):
         self.pixelGap = 45
-        mouse = PyMouse()
-        position = mouse.position()
+        self.mouse = PyMouse()
+        position = self.mouse.position()
         self.intPosition = (int(round(position[0])), int(round(position[1])))
         self.pieceMap = {}
         self.numberOfDistinctPieces = 0
@@ -87,3 +88,18 @@ class BoardScanner:
                 else:
                     print self.simplifiedBoard[row][column],
             print            
+
+    def makeMoves(self, moves):
+        for move in moves:
+            self.makeMove(move)
+            time.sleep(1)
+
+    def makeMove(self, move):
+        row = move[0]
+        column = move[1]
+        xPixel = self.intPosition[0] + (column * self.pixelGap)
+        yPixel = self.intPosition[1] + (row * self.pixelGap)
+        self.mouseClick(xPixel, yPixel)
+
+    def mouseClick(self, x, y):
+        self.mouse.click(x, y, 1)

@@ -119,7 +119,8 @@ while (True):
     b = Board()
     b.setBoard(pieces)
     brute = BruteForcer()
-    optimal = brute.getOptimalSequenceOfMoves(b, 3)
+    optimal = brute.getOptimalSequenceOfMoves(b, 2)
     print optimal.moves
     print optimal.points
+    bs.makeMoves(optimal.moves)
     raw_input("Press enter when you are ready")
