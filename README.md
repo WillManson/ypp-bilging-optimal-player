@@ -1,7 +1,9 @@
 # ypp-bilging-optimal-player
-A work-in-progress project to find optimal sequences of moves for the bilging puzzle in the game Yohoho! Puzzle Pirates by Three Rings Design.
+A project to find optimal sequences of moves for the bilging puzzle in the game Yohoho! Puzzle Pirates by Three Rings Design.
 
-In its current state, it can read the pieces from the board and find the optimal sequence of moves of length less than or equal to some given number n (which is passed to the getOptimalSequenceOfMoves method). I have found that the script works pretty well with n = 2. Setting n = 3 gives a massive boost in score, but can take a while to compute (which can negate the increase in score benefit for sufficiently slow machines, due to the nature of in-game scoring). The script can also automatically enter the moves into the game.
+Word of caution: using this script got me banned from the game. Use at your own risk.
+
+The script can read the pieces from the board and find the optimal sequence of moves of length less than or equal to some given number n (which is passed to the getOptimalSequenceOfMoves method). I have found that the script works pretty well with n = 2. Setting n = 3 gives a massive boost in score, but can take a while to compute (which can negate the increase in score benefit for sufficiently slow machines, due to the nature of in-game scoring). The script can also automatically enter the moves into the game.
 
 The script requires that you have installed:
 * [PIL](http://www.pythonware.com/products/pil/) or [Pillow](https://pillow.readthedocs.org/) (the latter is slightly easier to install)
